@@ -11,7 +11,8 @@ import {
   Legend,
 } from 'chart.js'
 import {
-  BoxPlotChart
+  BoxPlotController,
+  BoxAndWhiskers
 } from 'chartjs-chart-box-and-violin-plot'
 import { Line, Chart } from 'react-chartjs-2'
 import jsPDF from 'jspdf'
@@ -25,7 +26,8 @@ ChartJS.register(
   BarElement,
   Tooltip,
   Legend,
-  BoxPlotChart
+  BoxPlotController,
+  BoxAndWhiskers
 )
 
 function calcStats(values) {
