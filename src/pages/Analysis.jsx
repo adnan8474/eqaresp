@@ -10,7 +10,9 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
-import 'chartjs-chart-box-and-violin-plot'
+import {
+  BoxPlotChart
+} from 'chartjs-chart-box-and-violin-plot'
 import { Line, Chart } from 'react-chartjs-2'
 import jsPDF from 'jspdf'
 import * as XLSX from 'xlsx'
@@ -22,7 +24,8 @@ ChartJS.register(
   LineElement,
   BarElement,
   Tooltip,
-  Legend
+  Legend,
+  BoxPlotChart
 )
 
 function calcStats(values) {
