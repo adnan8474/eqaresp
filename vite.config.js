@@ -3,9 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  build: {
-    rollupOptions: {
-      external: ['chartjs-chart-box-and-violin-plot'],
-    },
-  },
+  // Standard config - bundle all dependencies
 })
