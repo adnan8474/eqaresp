@@ -133,12 +133,31 @@ export default function Analysis() {
     const wb = XLSX.utils.book_new()
     const wsRaw = XLSX.utils.json_to_sheet(raw)
     XLSX.utils.book_append_sheet(wb, wsRaw, 'Raw')
+    const statsRows = Object.entries(deviceStats).map(([id, s]) => ({
+      Device: id,
+      Count: s.n,
+      Mean: s.mean,
+      SD: s.sd,
+      CV: s.cv,
+    }))
+    const wsStats = XLSX.utils.json_to_sheet(statsRows)
+    XLSX.utils.book_append_sheet(wb, wsStats, 'Stats')
+    const wsDev = XLSX.utils.json_to_sheet(deviationRows)
+    XLSX.utils.book_append_sheet(wb, wsDev, 'Deviation')
     XLSX.writeFile(wb, 'report.xlsx')
   }
 
   function downloadPdf() {
     const doc = new jsPDF()
     doc.text('EQA Result Analysis', 10, 10)
+    let y = 20
+    Object.entries(deviceStats).forEach(([id, s]) => {
+      const text = `${id}: n=${s.n}, mean=${s.mean.toFixed(2)}, sd=${
+        Number.isNaN(s.sd) ? '-' : s.sd.toFixed(2)
+      }`
+      doc.text(text, 10, y)
+      y += 6
+    })
     doc.save('report.pdf')
   }
 
@@ -171,7 +190,12 @@ export default function Analysis() {
           </thead>
           <tbody>
             {Object.entries(deviceStats).map(([id, s]) => (
-              <tr key={id} className={s.cv > 5 ? 'text-red-600' : ''}>
+              <tr
+                key={id}
+                className={`${
+                  s.n < 2 ? 'text-gray-400' : s.cv > 5 ? 'text-red-600' : ''
+                }`}
+              >
                 <td className="border px-2">{id}</td>
                 <td className="border px-2">{s.n}</td>
                 <td className="border px-2">{s.mean.toFixed(2)}</td>
@@ -179,7 +203,7 @@ export default function Analysis() {
                   {Number.isNaN(s.sd) ? '–' : s.sd.toFixed(2)}
                 </td>
                 <td className="border px-2">
-                  {Number.isNaN(s.cv) ? '–' : s.cv.toFixed(2)}
+                  {Number.isNaN(s.cv) ? '–' : `${s.cv.toFixed(2)}${s.cv > 5 ? ' ⚠' : ''}`}
                 </td>
               </tr>
             ))}
